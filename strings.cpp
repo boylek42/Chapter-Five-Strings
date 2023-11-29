@@ -2,23 +2,42 @@
 #include <string>
 #include <string_view>
 
-void printS(std::string str) 
-{
-	std::cout << str << '\n';
-}
+void errorSV();
 
-void printSV(std::string_view str)
+void printSV(std::string_view strV) 
 {
-	std::cout << str << '\n';
+	std::cout << strV << '\n';
 }
 
 int main() 
 {
-	using namespace std::string_view_literals;
-	using namespace std::string_literals;
+	printSV("Hello World 1!");
 
-	printS("This is a string!"s);
-	printSV("This is a string view"sv);
+	std::string s2{ "Hello World 2!" };
+	printSV(s2);
+
+	std::string_view s3{ s2 };
+	printSV(s3);
+
+	errorSV();
 
 	return 0;
+}
+
+
+void errorSV() 
+{
+	// String view sv created
+	std::string_view sv{};
+
+	{
+		// String s is created within a nested block.
+		std::string s{ "Hello World" };
+
+		// sv is now viewing string S
+		sv = s;
+	}
+
+	// As s was defined within a nested block which has completed, SV will now exhibit undefined behaviour. 
+	std::cout << sv << '\n';
 }
